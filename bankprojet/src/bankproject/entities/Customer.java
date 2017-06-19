@@ -1,9 +1,11 @@
 package bankproject.entities;
 
-import bankproject.readers.AccountCustomerThread;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+// import bankproject.readers.AccountCustomerThread;
+// import java.util.ArrayList;
+// import java.util.Arrays;
+// import java.util.List;
+
+
 
 public class Customer extends AbstractEntity {
 	private Integer id;
@@ -14,7 +16,7 @@ public class Customer extends AbstractEntity {
     	customer_nom = b;
     	customer_prenom = c; }
     
-
+    
     public void printCustomer() {
         System.out.println("Customer name: " + customer_nom);
         System.out.println("Customer first name: " + customer_prenom);

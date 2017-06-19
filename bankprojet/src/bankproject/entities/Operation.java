@@ -28,7 +28,6 @@ public class Operation {
         // System.out.println("operation on account: " + country_code + customer_reference_number);
         System.out.println("equals a change of: " + action_amount);
         // System.out.println("New balance: " + serial_num);
-
     }
 
 

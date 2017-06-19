@@ -1,23 +1,27 @@
 package bankproject.entities;
 
-import bankproject.readers.AccountCustomerThread;
+// import bankproject.readers.AccountCustomerThread;
 
 public class Account extends AbstractEntity {
         String country_code;
         String account_no;
         String customer_prenom;
         String customer_nom;
-        public Account(String a, String b, String c, String d) {
+        int account_balance;
+        public Account(String a, String b, String c, String d, int e) {
             country_code = a;
             account_no = b;
     		customer_prenom = c;
-    		customer_nom = d;}
-		
+    		customer_nom = d;
+     		account_balance = e;}
+
+        
         public void printAccount() {
             System.out.println("New account country code: " + country_code);
             System.out.println("New account serial number: " + account_no);
             System.out.println("New account first name: " + customer_prenom);
             System.out.println("New account second name: " + customer_nom);
+            System.out.println("New account balance: " + account_balance);
         }
  
         // just to test
@@ -57,4 +61,9 @@ public class Account extends AbstractEntity {
     	public String getCountrycode() {
     		return country_code;
     	}        	
+    	
+        // return the account balance
+    	public int getAccountbalance() {
+    		return account_balance;
+    	}    	
 }
