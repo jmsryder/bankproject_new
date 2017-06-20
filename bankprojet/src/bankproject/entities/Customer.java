@@ -1,11 +1,5 @@
 package bankproject.entities;
 
-// import bankproject.readers.AccountCustomerThread;
-// import java.util.ArrayList;
-// import java.util.Arrays;
-// import java.util.List;
-
-
 
 public class Customer extends AbstractEntity {
 	private Integer id;

@@ -3,6 +3,10 @@ package bankproject.readers;
 import java.io.File;
 import java.util.Scanner;
 import java.util.Set;
+
+
+import com.mysql.jdbc.Connection;
+
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -19,16 +23,18 @@ import bankproject.services2.SQLiteManager;
 
 public class AccountCustomerThread {
   
-	// private static Connection con;
-	
     private List<Customer> list;
     public List<Customer> getList() { return list; }
 	
 	// location of input file on my local machine. This can be changed.
     final static String FILE_NAME = "/Users/James/Desktop/bankproject/input/accounts_customers.txt";
 	
-		public static void main(String[] args) {
 
+	  public void operationReadAccount() {
+ 
+		Connection con;
+			
+		
 		// define local variables	
 		String customer_prenom;
 		String customer_nom;
@@ -115,17 +121,7 @@ public class AccountCustomerThread {
 		          
                   System.out.println("Total number of accounts created: " + (lineNumber-2));
 		          
-//		          for (int i = 0; i < (lineNumber-2); i++) {
-//	                  System.out.print("New account no.: " + (i+1) + " ");
-//			          System.out.print(accountList.get(i).getLastname()+ "\t");
-//			          System.out.print(accountList.get(i).getFirstname()+ "\t");
-//			          System.out.print(accountList.get(i).getCountrycode());
-//			          System.out.println(accountList.get(i).getAccountno()+ " ");
-//			          System.out.println(accountList.get(i).getAccountbalance()+ " ");
-//			          }		 
-//		          
-//		          System.out.println("--------");
-   	          
+
 
 		          // remove duplicates from customer lists (this doesn't work, why not?);
 		      
@@ -137,39 +133,36 @@ public class AccountCustomerThread {
 		         customerList.addAll(customerList2);      
 		         
 		         
+
+		         
 		          // Confirm account info in command line (for bug checking)
 		          
-//                 System.out.println("Total customers list: " + (lineNumber-2));
-		          
-                 int customer_list_size = customerList.size();
-                 int account_list_size = accountList.size();
 
-                 
-                 
-//		          for (int i = 0; i < (customer_list_size); i++) {
-//	                  System.out.print("Customer no.: " + (i+1) + " ");
-//	                  System.out.print(customerList.get(i).getId()+ "\t");
-//	                  System.out.print(customerList.get(i).getLastname()+ "\t");
-//			          System.out.println(customerList.get(i).getFirstname()+ "\t");
-//			          }		 
+    		          
 		          
-		          System.out.println("--------");				         
-		       		          
-		          
-		          // delete the input file (removed for now)
-		          // file.delete();
+		          // delete the new account input file
+		          file.delete();
 		          	          
 		          
 		          // write all of the details of the new accounts to the SQL file
 		          
 					SQLiteManager test = new SQLiteManager();
 					ResultSet rs;
+	
+					// check for pre-existing names in SQLite database
+					
+			         
+					
+//	                 System.out.println("Total customers list: " + (lineNumber-2));
+			          
+	                 int customer_list_size = customerList.size();
+	                 int account_list_size = accountList.size();			
 					
 					
 	              //   int list_size = customerList.size();
 	                 
 			          for (int i = 0; i < (account_list_size); i++) {
-		                  System.out.print("Customer no.: " + (i+1) + " ");
+		                  System.out.print("adding account for customer no.: " + (i+1) + " ");
 		                  System.out.print(accountList.get(i).getLastname()+ "\t");
 				          System.out.println(accountList.get(i).getFirstname()+ "\t");
 			  	  		  test.addAccount(accountList.get(i).getFirstname(), 
@@ -179,7 +172,7 @@ public class AccountCustomerThread {
 				          }			          
 			          
 			          for (int i = 0; i < (customer_list_size); i++) {
-		                  System.out.print("Customer no.: " + (i+1) + " ");
+		                  System.out.print("creating new customer no.: " + (i+1) + " ");
 		                  System.out.print(customerList.get(i).getLastname()+ "\t");
 				          System.out.println(customerList.get(i).getFirstname()+ "\t");
 			  	  		  test.addCustomer(customerList.get(i).getFirstname(), 
@@ -187,12 +180,15 @@ public class AccountCustomerThread {
 				          }
 						 			          
 
-           
+			          System.out.println("New customers all processed");				         
+    
 		          		          
 		     }    catch (Exception ex) {
 		              ex.printStackTrace();
-		     }
+
 	    	    
 		    }
 
-		}
+
+	  }
+	  }

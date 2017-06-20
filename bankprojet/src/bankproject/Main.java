@@ -1,26 +1,37 @@
 package bankproject;
 
-import java.sql.Connection;
+
 import java.sql.SQLException;
-import java.sql.Statement;
 
-import bankproject.services.SrvCustomer;
-import bankproject.services.db.SQLiteManager;
-import java.sql.DriverManager;
 
+import bankproject.readers.AccountCustomerThread;
+import bankproject.readers.OperationThread;
+import bankproject.writers.BankStatementThread;
+
+// This is the top level of the code, from which the other routines
+// are launched.
 
 public class Main {
 
 	public static void main(String[] args) throws SQLException {
-		SrvCustomer srvCustomer = SrvCustomer.getInstance();
-		srvCustomer.setDbManager(SQLiteManager.getInstance());
-		Connection connection = srvCustomer.getDbManager().getConnection();
-		Statement st = connection.createStatement();
-		st.execute(srvCustomer.createTableInDB());
-	}
 
-	public static void main1(String[] args) throws Exception {
+		// read new account details from a text file (every 7 minutes)
+		AccountCustomerThread test3 = new AccountCustomerThread();		
+			test3.operationReadAccount();			
+		
+		
+		// process operations on accounts in database (every 11 minutes)
+		OperationThread test2 = new OperationThread();		
+			test2.operationReadOperation();
 
+			
+	
+		// produce a readout of bank statements by country and by credit/debit status (every 13 minutes)
+		BankStatementThread test1 = new BankStatementThread();		
+			test1.countrySort();
+			test1.creditDebt();
+	
+		
 	}
 	
 }

@@ -8,21 +8,23 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.TimerTask;
 
 import bankproject.entities.Account;
 import bankproject.services2.SQLiteManager;
 
-public class BankStatementThread {
 
 
-	public static void main(String[] args) {
+public class BankStatementThread extends TimerTask {
 
-	
+	// public static void main(String[] args) {
+
+		public void countrySort() {
+
     	
     	// location of output files on my local machine
     	final String FILE_NAME1 = "/Users/James/Desktop/bankproject/output/out_par_country_";
-    	final String FILE_NAME2 = "/Users/James/Desktop/bankproject/output/out_creditors_";
-    	final String FILE_NAME3 = "/Users/James/Desktop/bankproject/output/out_debtors_";
+
     	
         BufferedWriter writer = null;
         try {
@@ -200,104 +202,133 @@ public class BankStatementThread {
 		            writer.write(System.getProperty("line.separator"));
 		            
 			        for (int i = 0; i < (other_list_size); i++) {
-			          writer.write(dutchAccountList.get(i).getLastname()+ "\t");
-			          writer.write(dutchAccountList.get(i).getFirstname()+ "\t");
-			          writer.write(dutchAccountList.get(i).getAccountno()+ "\t");
-			          writer.write(dutchAccountList.get(i).getAccountbalance()+ " ");
+			          writer.write(otherAccountList.get(i).getLastname()+ "\t");
+			          writer.write(otherAccountList.get(i).getFirstname()+ "\t");
+			          writer.write(otherAccountList.get(i).getAccountno()+ "\t");
+			          writer.write(otherAccountList.get(i).getAccountbalance()+ " ");
 			          writer.write(System.getProperty("line.separator"));
 			          }				        
 
 		            writer.close();
 			        
-			        
+		 } catch (Exception e) {
+	            e.printStackTrace();
+	        } finally {
+	            try {
+	                // Close the writer regardless of what happens...
+	                writer.close();
+	            } catch (Exception e) {
+	            }
+	        }
+	    }			        
+
+	
+	
+	
+	
+	
+	
+	public void creditDebt() {
+
+    	final String FILE_NAME2 = "/Users/James/Desktop/bankproject/output/out_creditors_";
+    	final String FILE_NAME3 = "/Users/James/Desktop/bankproject/output/out_debtors_";	
+		
+		List<Account> creditAccountList = new ArrayList<Account>();
+		List<Account> debitAccountList = new ArrayList<Account>();
+
+		SQLiteManager test = new SQLiteManager();
+		ResultSet rs;
+
+		String timeLog = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
+		String country_code;
+		String account_no;
+		String customer_prenom;
+		String customer_nom;
+		Integer account_balance;
+		    			
+		BufferedWriter writer = null;
+
 		        		
-		    		    List<Account> creditAccountList = new ArrayList<Account>();
-		    		    List<Account> debitAccountList = new ArrayList<Account>();
-	    		   		    
-		            	// output_par_country
+		// output_par_country
 		            	
-		    	        // write all of the details of the new accounts to the SQL file
+		// write all of the details of the new accounts to the SQL file
 		    	          
-		    		//    SQLiteManager test = new SQLiteManager();
-		    		//	ResultSet rs;
+		//    SQLiteManager test = new SQLiteManager();
+		//	ResultSet rs;
 		                            
-//		    			try {
+		try {
 
-		    				  rs = test.displayAccounts();
+		    rs = test.displayAccounts();
 		    		            
-		    					while (rs.next()) {
+		    while (rs.next()) {
 
-		    	                    country_code = rs.getString("accountno").substring(0, Math.min(rs.getString("accountno").length(), 2));
-		    	                    account_no = rs.getString("accountno");
-		    	                    customer_prenom = rs.getString("fname");
-		    	                    customer_nom = rs.getString("lname");
-		    	                    account_balance = rs.getInt("accountsum");
+		    	country_code = rs.getString("accountno").substring(0, Math.min(rs.getString("accountno").length(), 2));
+		    	account_no = rs.getString("accountno");
+		    	customer_prenom = rs.getString("fname");
+		    	customer_nom = rs.getString("lname");
+		    	account_balance = rs.getInt("accountsum");
 		    				  
-		                  	// assign proper country code (just selected countries for now)
-		                      if (account_balance < 0) {
-		    	                    debitAccountList.add(new Account(country_code, account_no, customer_prenom, customer_nom, account_balance));             
+		    // assign proper country code (just selected countries for now)
+		    if (account_balance < 0) {
+		    	    debitAccountList.add(new Account(country_code, account_no, customer_prenom, customer_nom, account_balance));             
 
-		                      } else if (account_balance > -1) {
-		    	                    creditAccountList.add(new Account(country_code, account_no, customer_prenom, customer_nom, account_balance));             
+		            } else if (account_balance > -1) {
+		    	          creditAccountList.add(new Account(country_code, account_no, customer_prenom, customer_nom, account_balance));             
 		    		                        
-		                      }		
-		    					}
+		            }		
+		    		}
 
 		    					
-		    		            File logFile6 = new File(FILE_NAME2 + timeLog + ".txt");
+		    		File logFile6 = new File(FILE_NAME2 + timeLog + ".txt");
 		    		            
-		    	                int credit_list_size = creditAccountList.size();
+		    	    int credit_list_size = creditAccountList.size();
 		    		            
-		    		            writer = new BufferedWriter(new FileWriter(logFile6));
-		    		            writer.write("Accounts in credit");
-		    		            writer.write(System.getProperty("line.separator"));
-		    		            writer.write("------------------");
-		    		            writer.write(System.getProperty("line.separator"));
-		    		            writer.write(" ");
-		    		            writer.write(System.getProperty("line.separator"));
-		    		            writer.write("Lastname \t Firstname \t Accountno \t Accountbalance ");
-		    		            writer.write(System.getProperty("line.separator"));
+		    		writer = new BufferedWriter(new FileWriter(logFile6));
+		    		writer.write("Accounts in credit");
+		    	    writer.write(System.getProperty("line.separator"));
+		    		writer.write("------------------");
+		    		writer.write(System.getProperty("line.separator"));
+		    		writer.write(" ");
+		    		writer.write(System.getProperty("line.separator"));
+		    		writer.write("Lastname \t Firstname \t Accountno \t Accountbalance ");
+		    		writer.write(System.getProperty("line.separator"));
 		    		            
-		    			        for (int i = 0; i < (credit_list_size); i++) {
-		    			          writer.write(creditAccountList.get(i).getLastname()+ "\t");
-		    			          writer.write(creditAccountList.get(i).getFirstname()+ "\t");
-		    			          writer.write(creditAccountList.get(i).getAccountno()+ "\t");
-		    			          writer.write(creditAccountList.get(i).getAccountbalance()+ " ");
-		    			          writer.write(System.getProperty("line.separator"));
-		    			          }		 
+		    		for (int i = 0; i < (credit_list_size); i++) {
+		    			 writer.write(creditAccountList.get(i).getLastname()+ "\t");
+		    			 writer.write(creditAccountList.get(i).getFirstname()+ "\t");
+		    			 writer.write(creditAccountList.get(i).getAccountno()+ "\t");
+		    			 writer.write(creditAccountList.get(i).getAccountbalance()+ " ");
+		    			 writer.write(System.getProperty("line.separator"));
+		    			 }		 
 		    		          
-		    		            writer.close();
+		    		writer.close();
 
 		    			        
-		    		            File logFile7 = new File(FILE_NAME3 + timeLog + ".txt");
+		    		File logFile7 = new File(FILE_NAME3 + timeLog + ".txt");
 		    		            
-		    	                int debit_list_size = debitAccountList.size();
+		    	    int debit_list_size = debitAccountList.size();
 		    		            
-		    		            writer = new BufferedWriter(new FileWriter(logFile7));
-		    		            writer.write("Accounts in debit");
-		    		            writer.write(System.getProperty("line.separator"));
-		    		            writer.write("------------------");
-		    		            writer.write(System.getProperty("line.separator"));
-		    		            writer.write(" ");
-		    		            writer.write(System.getProperty("line.separator"));
-		    		            writer.write("Lastname \t Firstname \t Accountno \t Accountbalance ");
-		    		            writer.write(System.getProperty("line.separator"));
+		    		writer = new BufferedWriter(new FileWriter(logFile7));
+		    		writer.write("Accounts in debit");
+		    		writer.write(System.getProperty("line.separator"));
+		    		writer.write("------------------");
+		    		writer.write(System.getProperty("line.separator"));
+		    		writer.write(" ");
+		    		writer.write(System.getProperty("line.separator"));
+		    		writer.write("Lastname \t Firstname \t Accountno \t Accountbalance ");
+		    		writer.write(System.getProperty("line.separator"));
 		    		            
-		    			        for (int i = 0; i < (debit_list_size); i++) {
-		    			          writer.write(debitAccountList.get(i).getLastname()+ "\t");
-		    			          writer.write(debitAccountList.get(i).getFirstname()+ "\t");
-		    			          writer.write(debitAccountList.get(i).getAccountno()+ "\t");
-		    			          writer.write(debitAccountList.get(i).getAccountbalance()+ " ");
-		    			          writer.write(System.getProperty("line.separator"));
-		    			          }				        
+		    		for (int i = 0; i < (debit_list_size); i++) {
+		    			 writer.write(debitAccountList.get(i).getLastname()+ "\t");
+		    			 writer.write(debitAccountList.get(i).getFirstname()+ "\t");
+		    			 writer.write(debitAccountList.get(i).getAccountno()+ "\t");
+		    			 writer.write(debitAccountList.get(i).getAccountbalance()+ " ");
+		    			 writer.write(System.getProperty("line.separator"));
+		    			 }				        
 		    			        
-		    		            writer.close();
-		    		
+		    	    writer.close();
 
-            
-            
-            
-					 } catch (Exception e) {
+					} catch (Exception e) {
             e.printStackTrace();
         } finally {
             try {
@@ -307,4 +338,11 @@ public class BankStatementThread {
             }
         }
     }
+
+
+	@Override
+	public void run() {
+		// TODO Auto-generated method stub
+		
+	}
 }

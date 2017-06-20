@@ -7,12 +7,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-// import bankproject.entities.AbstractEntity;
-// import bankproject.entities.Account;
-// import bankproject.entities.Customer;
-// import bankproject.entities.Customer2;
-// import bankproject.readers.AccountCustomerThread;
-
 
 
 public class SQLiteManager {
@@ -21,12 +15,20 @@ public class SQLiteManager {
 	public static boolean hasData = false;	
 	
 	 public void getConnection() throws ClassNotFoundException, SQLException {
-	      // sqlite driver
+	
+		 
+		 // sqlite driver
 		  Class.forName("org.sqlite.JDBC");
 		  // database path, if it's new database, it will be created in the project folder
 		  con = DriverManager.getConnection("jdbc:sqlite:JBankProj.db");
 		  initialiseAccountDB();
-	 }
+		  
+	     if(con == null){
+	    	    Class.forName("org.sqlite.JDBC");
+	    	    con = DriverManager.getConnection("jdbc:sqlite:JBankProj.db");
+	    	    }
+	     }
+
 	 
 
 	 
@@ -73,7 +75,11 @@ public class SQLiteManager {
 
 		Integer old_balance;
 		Integer new_balance;
+		String answer;
 
+		// SQLiteManager test = new SQLiteManager();
+		// ResultSet rs = new ResultSet();
+		
 	    String query = ("select accountsum from account where accountno = '"+account_no+"'");
 
 	    System.out.println(account_no);
@@ -81,7 +87,7 @@ public class SQLiteManager {
 
 	      ResultSet rs = st.executeQuery(query);
 	      System.out.println(rs);
-	        String answer = rs.getString("accountsum");
+	        answer = rs.getString("accountsum");
 		    old_balance = rs.getInt("accountsum");
 		    new_balance = old_balance + account_change;
 		    

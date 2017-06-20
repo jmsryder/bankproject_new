@@ -2,6 +2,7 @@ package bankproject.readers;
 
 import java.io.File;
 import java.util.Scanner;
+import java.util.TimerTask;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,12 +11,16 @@ import bankproject.services2.SQLiteManager;
 import java.sql.ResultSet;
 
 
-public class OperationThread {
+public class OperationThread extends TimerTask {
   
+	
+	public void operationReadOperation() {
+	
+	
 	    // set input location for operations
-        final static String FILE_NAME = "/Users/James/Desktop/bankproject/input/operation.txt";
+        final String FILE_NAME = "/Users/James/Desktop/bankproject/input/operation.txt";
 
-        public static void main(String[] args) {
+        // public static void main(String[] args) {
 
 		String customer_prenom;
 		String customer_nom;
@@ -72,29 +77,22 @@ public class OperationThread {
 		          
 		          // write all of the details of the new accounts to the SQL file
 		          
-					SQLiteManager test1 = new SQLiteManager();
-					ResultSet rs;		          
+					SQLiteManager test11 = new SQLiteManager();
+				//	ResultSet rs;		          
 		          
                   // System.out.println("Total commands processed: " + (lineNumber-2));
 		          
 		          for (int i = 0; i < (lineNumber-2); i++) {
-//	                  System.out.print("New command no.: " + (i+1) + " ");
-//			          System.out.print(operationList.get(i).getLastname()+ "\t");
-//			          System.out.print(operationList.get(i).getFirstname()+ "\t");
-//
-//	                  System.out.print(operationList.get(i).getActionAmount()+ "\t");
-//			          System.out.println(operationList.get(i).getAccountNo()+ " ");
 			          
-			          test1.modAccountBal(operationList.get(i).getAccountNo(), 
-			        		  operationList.get(i).getActionAmount());
-
+			  //        test11.modAccountBal(operationList.get(i).getAccountNo(), 
+			   //     		  operationList.get(i).getActionAmount());
 			          
 			          }		 
 		          
-		          System.out.println("--------");
+		          System.out.println("Account operations all processed");
 		          
-		          // delete the input file
-		          // file.delete();
+		          // delete the operation input file
+		          file.delete();
 		          
 		          
 		     } catch (Exception ex) {
@@ -102,4 +100,12 @@ public class OperationThread {
 		     }
 		   }
 
-		}
+	@Override
+	public void run() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	      }
+        
+		
